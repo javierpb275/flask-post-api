@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  postgres-db-image:
+    image: postgres
+    container_name: postgres-db-container
+    restart: always
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+  pgadmin4-image:
+    image: dpage/pgadmin4
+    container_name: pgadmin4-container
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  flask-post-api-image:
+    build: .
+    container_name: flask-post-api-container
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    env_file: 
+      - ./src/config/.env
+      - ./src/config/.flaskenv
+    depends_on:
+      - postgres-db-image
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+    
