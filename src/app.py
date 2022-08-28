@@ -6,6 +6,8 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 from config.blocklist import BLOCKLIST
+from resources.user_resource import User, UserList
+from resources.post_resource import Post, PostList
 
 app = Flask(__name__)
 
@@ -26,9 +28,13 @@ def check_if_token_in_blocklist(jwt_header, jwt_data):
 
 api = Api(app)
 
-@app.route('/', methods=['GET'])
-def ping():
-    return jsonify({"response": "hello world!!"})
+# user routes
+api.add_resource(User, '/api/users/<int:user_id>')
+api.add_resource(UserList, '/api/users')
+
+# post routes
+api.add_resource(Post, '/api/posts/<int:post_id>')
+api.add_resource(PostList, '/api/posts')
 
 
 if __name__ == '__main__':
