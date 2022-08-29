@@ -36,10 +36,15 @@ class UserModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def find_all(cls, **kwargs):
-        if not kwargs:
-            return cls.query.all()
-        return cls.query.filter_by(**kwargs)
+    def find_all(cls, page, per_page, **kwargs):
+        for key, value in kwargs.copy().items():
+            if not value:
+                kwargs.pop(key, None)
+        if not page:
+            page = 1
+        if not per_page:
+            per_page = 10
+        return cls.query.filter_by(**kwargs).paginate(int(page), int(per_page), error_out=False).items
 
     @classmethod
     def find_one(cls, **kwargs):

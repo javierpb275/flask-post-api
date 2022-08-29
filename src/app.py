@@ -1,7 +1,7 @@
 from config.db import db
 from os import environ
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -22,9 +22,11 @@ db.init_app(app)
 
 jwt = JWTManager(app)
 
+
 @jwt.token_in_blocklist_loader
 def check_if_token_in_blocklist(jwt_header, jwt_data):
     return jwt_data['jti'] in BLOCKLIST
+
 
 api = Api(app)
 

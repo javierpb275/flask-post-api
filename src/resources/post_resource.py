@@ -1,5 +1,6 @@
 from models.post_model import PostModel
 from flask_restful import Resource
+from flask import request
 
 
 class Post(Resource):
@@ -18,7 +19,9 @@ class Post(Resource):
 class PostList(Resource):
 
     def get(self):
-        posts = [post.json() for post in PostModel.find_all()]
+        args = request.args
+        posts = [post.json() for post in PostModel.find_all(args.get("page"), args.get("per_page"), post_id=args.get("post_id"),
+                                                            user_id=args.get("user_id"), title=args.get("title"), description=args.get("description"))]
         return {"error": False,
                 "data": {
                     "message": f"{len(posts)} Posts Found",

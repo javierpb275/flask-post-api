@@ -1,5 +1,6 @@
 from models.user_model import UserModel
 from flask_restful import Resource
+from flask import request
 
 
 class User(Resource):
@@ -18,7 +19,9 @@ class User(Resource):
 class UserList(Resource):
 
     def get(self):
-        users = [user.json() for user in UserModel.find_all()]
+        args = request.args
+        users = [user.json() for user in UserModel.find_all(args.get("page"), args.get("per_page"), user_id=args.get("user_id"),
+                                                            username=args.get("username"), email=args.get("email"))]
         return {"error": False,
                 "data": {
                     "message": f"{len(users)} Users Found",
