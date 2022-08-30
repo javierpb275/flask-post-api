@@ -1,10 +1,12 @@
 from models.post_model import PostModel
 from flask_restful import Resource
 from flask import request
+from flask_jwt_extended import jwt_required
 
 
 class Post(Resource):
 
+    @jwt_required()
     def get(self, post_id):
         post = PostModel.find_one(post_id=post_id)
         if not post:
@@ -18,6 +20,7 @@ class Post(Resource):
 
 class PostList(Resource):
 
+    @jwt_required()
     def get(self):
         args = request.args
         posts = [post.json() for post in PostModel.find_all(args.get("page"), args.get("per_page"), args.get('sort'), post_id=args.get("post_id"),
