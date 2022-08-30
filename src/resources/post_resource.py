@@ -20,7 +20,7 @@ class PostList(Resource):
 
     def get(self):
         args = request.args
-        posts = [post.json() for post in PostModel.find_all(args.get("page"), args.get("per_page"), post_id=args.get("post_id"),
+        posts = [post.json() for post in PostModel.find_all(args.get("page"), args.get("per_page"), args.get('sort'), post_id=args.get("post_id"),
                                                             user_id=args.get("user_id"), title=args.get("title"), description=args.get("description"))]
         return {"error": False,
                 "data": {

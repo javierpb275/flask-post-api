@@ -36,15 +36,44 @@ class PostModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def find_all(cls, page, per_page, **kwargs):
-        for key, value in kwargs.copy().items():
-            if not value:
-                kwargs.pop(key, None)
+    def _get_sort(cls, sort):
+        if not sort:
+            sort = cls.post_id.desc()
+        else:
+            if "post_id" in sort:
+                sort_by = cls.post_id
+            elif "user_id" in sort:
+                sort_by = cls.user_id
+            elif "title" in sort:
+                sort_by = cls.title
+            elif "description" in sort:
+                sort_by = cls.description
+            if sort[0] == '-':
+                sort = sort_by.desc()
+            else:
+                sort = sort_by.asc()
+        return sort
+
+    @staticmethod
+    def _get_pagination(page, per_page):
         if not page:
             page = 1
         if not per_page:
             per_page = 10
-        return cls.query.filter_by(**kwargs).paginate(int(page), int(per_page), error_out=False).items
+        return int(page), int(per_page)
+
+    @staticmethod
+    def _remove_keys_with_empty_values(dictionary):
+        for key, value in dictionary.copy().items():
+            if not value:
+                dictionary.pop(key, None)
+
+    @classmethod
+    def find_all(cls, page, per_page, sort, **kwargs):
+        cls._remove_keys_with_empty_values(kwargs)
+        page, per_page = cls._get_pagination(page, per_page)
+        sort = cls._get_sort(sort)
+        return cls.query.filter_by(**kwargs).order_by(sort).paginate(page, per_page, error_out=False).items
 
     @classmethod
     def find_one(cls, **kwargs):

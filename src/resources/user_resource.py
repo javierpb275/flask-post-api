@@ -20,7 +20,7 @@ class UserList(Resource):
 
     def get(self):
         args = request.args
-        users = [user.json() for user in UserModel.find_all(args.get("page"), args.get("per_page"), user_id=args.get("user_id"),
+        users = [user.json() for user in UserModel.find_all(args.get("page"), args.get("per_page"), args.get('sort'), user_id=args.get("user_id"),
                                                             username=args.get("username"), email=args.get("email"))]
         return {"error": False,
                 "data": {
