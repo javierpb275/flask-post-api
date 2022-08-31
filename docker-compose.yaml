@@ -28,7 +28,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .:/app
+      - .:/usr/src/app/
     env_file: 
       - ./src/config/.env
       - ./src/config/.flaskenv

@@ -1,16 +1,17 @@
-FROM alpine:3.10
+# pull official base image
+FROM python:3.10-slim-buster
 
-RUN apk add --no-cache python3-dev \
-    && pip3 install --upgrade pip
+# set work directory
+WORKDIR /usr/src/app
 
-WORKDIR /app 
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt /usr/src/app/requirements.txt
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc \
+    && pip install -r requirements.txt
 
-COPY . /app
+# copy project
+COPY . /usr/src/app/
 
-RUN \
- apk add --no-cache python3 postgresql-libs && \
- apk add --no-cache --virtual .build-deps gcc python3-dev musl-dev postgresql-dev && \
- pip3 --no-cache-dir install -r requirements.txt && \
- apk --purge del .build-deps
-
-CMD [ "python3", "src/app.py" ]
+CMD [ "python", "src/app.py" ]

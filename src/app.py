@@ -1,5 +1,6 @@
 from config.db import db
 from os import environ
+from flask_cors import CORS
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_restful import Api
@@ -22,6 +23,8 @@ app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 db.init_app(app)
 
 jwt = JWTManager(app)
+
+CORS(app)
 
 api = Api(app)
 
