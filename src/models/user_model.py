@@ -23,8 +23,7 @@ class UserModel(db.Model):
             'user_id': self.user_id,
             'username': self.username,
             'email': self.email,
-            'avatar': self.avatar,
-            'posts': [post.json() for post in self.posts.all()]
+            'avatar': self.avatar
         }
 
     def save_to_db(self):

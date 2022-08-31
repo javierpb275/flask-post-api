@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 from datetime import timedelta
 from config.blocklist import BLOCKLIST
 from resources.user_resource import User, UserList, Profile, UserSignIn, UserSignUp, UserSignOut, TokenRefresh
-from resources.post_resource import Post, PostList
+from resources.post_resource import Post, PostList, MyPost, MyPostList
 
 # app configuration
 app = Flask(__name__)
@@ -88,6 +88,8 @@ api.add_resource(Profile, '/api/users/me')
 # post routes
 api.add_resource(Post, '/api/posts/<int:post_id>')
 api.add_resource(PostList, '/api/posts')
+api.add_resource(MyPost, '/api/posts/me/<int:post_id>')
+api.add_resource(MyPostList, '/api/posts/me')
 
 
 if __name__ == '__main__':
